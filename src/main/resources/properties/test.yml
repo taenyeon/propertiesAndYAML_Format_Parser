@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: aa
+    url: bb
+    name: cc
+    password: dd
+
+example:
+  datasource:
+    driver-class-name: aa
+    url: bb
+    name: cc
+    password: dd
