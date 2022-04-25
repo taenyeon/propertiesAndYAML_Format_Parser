@@ -15,6 +15,7 @@ import java.util.*;
 public class Parser {
     Set<String> keySet;
     List<String> keyList;
+
     // properties 파일을 읽어 Map 으로 변환하고 원하는 형태로 수정
     @GetMapping("/prop")
     public void getProperties() throws IOException {
@@ -53,23 +54,23 @@ public class Parser {
 //            LinkedHashMap<String, Object> yamlMap = yaml.load(inputStream);
             List<Object> afterYaml = new ArrayList<>();
             Iterable<Object> objects = yaml.loadAll(inputStream);
-            while (objects.iterator().hasNext()){
+            while (objects.iterator().hasNext()) {
                 keyList = new ArrayList<>();
                 keySet = new HashSet<>();
                 LinkedHashMap<String, Object> yamlMap = (LinkedHashMap<String, Object>) objects.iterator().next();
-            log.info("[Before Parsing] -> {}", yamlMap);
-            ymlParser(yamlMap, "");
-            log.info("[After Parsing] -> {}", yamlMap);
-            afterYaml.add(yamlMap);
-        validCheck();
+                log.info("[Before Parsing] -> {}", yamlMap);
+                ymlParser(yamlMap, "");
+                log.info("[After Parsing] -> {}", yamlMap);
+                afterYaml.add(yamlMap);
+                validCheck();
             }
             FileWriter writer = new FileWriter("properties 폴더 경로 (절대 경로)" + file.getName());
 //            String dump = yaml.dump(yamlMap);
 //            log.info("[Dump] Yml String -> {}", dump);
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(afterYaml);
-            log.info("[Dump] Yml String -> {}",stringBuilder);
-            yaml.dumpAll(afterYaml.iterator(),writer);
+            log.info("[Dump] Yml String -> {}", stringBuilder);
+            yaml.dumpAll(afterYaml.iterator(), writer);
 //            yaml.dump(yamlMap, writer);
         }
     }
@@ -80,14 +81,18 @@ public class Parser {
             log.info("[class] key -> {} || class -> {}", key, value.getClass().getName());
             if (value instanceof LinkedHashMap) {
                 log.info("[Continue] key -> {} || value -> {}", key, value);
-                ymlParser((LinkedHashMap<String, Object>) value, key);
+                if (subject.equals("") || subject.isEmpty()) {
+                    ymlParser((LinkedHashMap<String, Object>) value, key);
+                } else {
+                    ymlParser((LinkedHashMap<String, Object>) value, subject + "_" + key);
+                }
             } else {
                 // replace param 에 원하는 형태로 저장
                 // 예제에서는 ${변수명:기존값} 형태로 저장
                 String underBarKey = key.replace("-", "_");
                 String underBarSubject = subject.replace("-", "_");
                 String replaceKey = underBarSubject.toUpperCase(Locale.ROOT) + "_" + underBarKey.toUpperCase(Locale.ROOT);
-                yml.replace(key, "${"+ replaceKey + ":" + value + "}");
+                yml.replace(key, "${" + replaceKey + ":" + value + "}");
                 log.info("[Replace] key -> {} || value -> {}", key, "${" + underBarSubject.toUpperCase(Locale.ROOT) + "_" + underBarKey.toUpperCase(Locale.ROOT) + ":" + value + "}");
                 keyList.add(replaceKey);
                 keySet.add(replaceKey);
@@ -117,11 +122,11 @@ public class Parser {
         }
     }
 
-    public void validCheck(){
+    public void validCheck() {
         boolean isEquals = keyList.size() == keySet.size();
         // Set -> 중복 허용 x 따라서, properties 전체 key 값과 일치하지 않는다면
         // 중복 key 값이 발생했음을 알 수 있다.
-        log.info("[중복체크] {} || keys = {}, keySetSize = {}", isEquals, keyList.size(), keySet.size());
+        log.warn("[중복체크] {} || keys = {}, keySetSize = {}", isEquals, keyList.size(), keySet.size());
         if (!isEquals) {
             for (String key : keySet) {
                 int i = 0;
@@ -131,7 +136,7 @@ public class Parser {
                     }
                 }
                 if (i > 1) {
-                    log.info("[중복 값 발견] 해당 값은 중복 입니다. -> {}, count = {}", key, i);
+                    log.error("[중복 값 발견] 해당 값은 중복 입니다. -> {}, count = {}", key, i);
                 }
             }
         }
