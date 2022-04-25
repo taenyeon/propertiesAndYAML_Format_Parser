@@ -18,7 +18,7 @@ public class Parser {
     // properties 파일을 읽어 Map 으로 변환하고 원하는 형태로 수정
     @GetMapping("/prop")
     public void getProperties() throws IOException {
-        File dir = new File("C:\\intelliJProjects\\propertiesAndYAML_Format_Parser\\src\\main\\resources\\properties");
+        File dir = new File("properties 폴더 경로 (절대 경로)");
         File[] files = dir.listFiles();
         for (File file : files) {
             keyList = new ArrayList<>();
@@ -30,7 +30,7 @@ public class Parser {
             log.info("[Before Parsing] -> {}", map);
             propertiesParser(map);
             log.info("[After Parsing] -> {}", map);
-            FileWriter writer = new FileWriter("C:\\intelliJProjects\\propertiesAndYAML_Format_Parser\\src\\main\\resources\\properties\\" + file.getName());
+            FileWriter writer = new FileWriter("properties 폴더 경로 (절대 경로)" + file.getName());
             map.store(writer, "test");
             validCheck();
             inputStream.close();
@@ -45,7 +45,7 @@ public class Parser {
         dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         dumperOptions.setPrettyFlow(true);
         Yaml yaml = new Yaml(dumperOptions);
-        File dir = new File("C:\\intelliJProjects\\propertiesAndYAML_Format_Parser\\src\\main\\resources\\properties");
+        File dir = new File("properties 폴더 경로 (절대 경로)");
         File[] files = dir.listFiles();
         for (File file : files) {
             log.info("[파일] 이름 : {}", file.getName());
@@ -63,7 +63,7 @@ public class Parser {
             afterYaml.add(yamlMap);
         validCheck();
             }
-            FileWriter writer = new FileWriter("C:\\intelliJProjects\\propertiesAndYAML_Format_Parser\\src\\main\\resources\\properties\\" + file.getName());
+            FileWriter writer = new FileWriter("properties 폴더 경로 (절대 경로)" + file.getName());
 //            String dump = yaml.dump(yamlMap);
 //            log.info("[Dump] Yml String -> {}", dump);
             StringBuilder stringBuilder = new StringBuilder();
