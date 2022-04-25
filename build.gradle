@@ -19,7 +19,7 @@ dependencies {
     testImplementation('org.projectlombok:lombok')
     annotationProcessor('org.projectlombok:lombok')
     testAnnotationProcessor('org.projectlombok:lombok')
-
+	implementation 'com.esotericsoftware.yamlbeans:yamlbeans:1.15'
 }
 
 tasks.named('test') {

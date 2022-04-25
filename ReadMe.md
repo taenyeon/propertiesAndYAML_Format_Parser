@@ -1,11 +1,18 @@
 #PropertiesAndYAML Format Parser
 
+### 📌사용 방법
+properties 나 yml 파일들을 resources 폴더 내 properties 폴더를 생성하여 넣고,  
+해당 컨트롤러 실행 -> ${변수명:기존값} 형태로 저장.  
+폴더 단위로 읽기 때문에 여러개의 파일을 한번에 처리 가능.
+##### 패턴
+properties : datasource.hikari.url -> HIKARI_URL (뒤에서 2자리) -> 중복 발생 가능  
+yml : datasource.hikari.url -> DATASOURCE_HIKARI_URL (모든 자리) -> 중복 x
+###### 패턴 자유롭게 변경 가능
 ### 📌개발 취지
 회사내에서 대규모 이관이 계획되었다.  
 이때 문제점으로 나온것이 총 2가지가 있다.
 #####1. 향후 관리를 생각하여 MSA 환경에서 여기저기 분산된 properties나 yml 설정 파일들을 통합해야한다.
 #####2. 현재 프로젝트의 GIT을 같이 공유하는 방향으로 설정 파일들을 이관 환경에 맞게 유동적으로 변경할 수 있어야한다.
-  
 이를 해결하기 위해서는 설정 파일들이 AWS,Docker 와 같은 여러 환경에 따라 값을 주입받을 수 있도록  
 해야하며, 그렇게 하기위해선 모든 properties나 yml 파일을 값을 주입받을 수 있는 형태로 수정할 필요가 있었다.  
 현재 프로젝트에는 수십개의 API 서버가 서로 통신을 주고받고 있으며 개발, 테스트, 실용화등 여러 쓰임에 따라   
